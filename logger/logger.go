@@ -4,7 +4,6 @@ import (
 	"github.com/blendle/zapdriver"
 	"go.uber.org/zap"
 	"log"
-	"os"
 	"sync"
 )
 
@@ -76,11 +75,6 @@ func Fatal(msg string, fields ...zap.Field) {
 // Logger ...
 func Logger() *zap.Logger {
 	return l
-}
-
-// Reset ...
-func Reset() {
-	l = new(os.Getenv("GOENV"))
 }
 
 func new() *zap.Logger {
