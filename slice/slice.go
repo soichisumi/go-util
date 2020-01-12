@@ -15,3 +15,15 @@ func Contains(slice, element interface{}) bool {
 	}
 	return false
 }
+
+func Sequence(start, times, step uint64) []uint64 {
+	if times == 0 {
+		return []uint64{}
+	}
+	res := make([]uint64, times)
+	for i, _ := range res {
+		res[i] = start
+		start += step
+	}
+	return res
+}
