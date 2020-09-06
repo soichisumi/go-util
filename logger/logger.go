@@ -77,6 +77,10 @@ func Logger() *zap.Logger {
 	return l
 }
 
+func SetOptions(opts ...zap.Option) {
+	l = l.WithOptions(opts...)
+}
+
 func new() *zap.Logger {
 	var cfg zap.Config = config()
 
