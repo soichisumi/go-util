@@ -3,7 +3,9 @@ package logger
 import (
 	"github.com/blendle/zapdriver"
 	"go.uber.org/zap"
+	"go.uber.org/zap/zapcore"
 	"log"
+	"os"
 	"sync"
 )
 
@@ -82,7 +84,13 @@ func SetOptions(opts ...zap.Option) {
 }
 
 func new() *zap.Logger {
-	var cfg zap.Config = config()
+	var cfg zap.Config
+	switch os.Getenv("env") {
+	case "bench":
+		cfg = benchConfig()
+	default:
+		cfg = defaultConfig()
+	}
 
 	logger, err := cfg.Build(zapdriver.WrapCore(), zap.AddCallerSkip(calldepth))
 	if err != nil {
@@ -92,9 +100,17 @@ func new() *zap.Logger {
 	return logger
 }
 
-func config() zap.Config {
+func defaultConfig() zap.Config {
 	var cfg = zapdriver.NewDevelopmentConfig()
-	cfg.InitialFields = map[string]interface{}{"env": "dev"}
+	cfg.InitialFields = map[string]interface{}{"env": os.Getenv("env")}
 	cfg.DisableStacktrace = true
+	return cfg
+}
+
+func benchConfig() zap.Config {
+	var cfg = zapdriver.NewProductionConfig()
+	cfg.InitialFields = map[string]interface{}{"env": os.Getenv("env")}
+	cfg.DisableStacktrace = true
+	cfg.Level = zap.NewAtomicLevelAt(zapcore.FatalLevel)
 	return cfg
 }
