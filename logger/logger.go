@@ -85,7 +85,7 @@ func SetOptions(opts ...zap.Option) {
 
 func new() *zap.Logger {
 	var cfg zap.Config
-	switch os.Getenv("env") {
+	switch os.Getenv("ENV") {
 	case "bench":
 		cfg = benchConfig()
 	default:
@@ -102,14 +102,14 @@ func new() *zap.Logger {
 
 func defaultConfig() zap.Config {
 	var cfg = zapdriver.NewDevelopmentConfig()
-	cfg.InitialFields = map[string]interface{}{"env": os.Getenv("env")}
+	cfg.InitialFields = map[string]interface{}{"env": os.Getenv("ENV")}
 	cfg.DisableStacktrace = true
 	return cfg
 }
 
 func benchConfig() zap.Config {
 	var cfg = zapdriver.NewProductionConfig()
-	cfg.InitialFields = map[string]interface{}{"env": os.Getenv("env")}
+	cfg.InitialFields = map[string]interface{}{"env": os.Getenv("ENV")}
 	cfg.DisableStacktrace = true
 	cfg.Level = zap.NewAtomicLevelAt(zapcore.FatalLevel)
 	return cfg
